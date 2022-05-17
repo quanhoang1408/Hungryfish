@@ -4,178 +4,19 @@
 #include<SDL_image.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "ca.h"
+#include "cacon.h"
+#include "SDL_utils.h"
 using namespace std;
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 600;
-
-SDL_Window* gWindow = NULL;
-SDL_Renderer *gRenderer = NULL;
-void initSDL();
-class cacon;
-class ca{
-    public:
-        int size_ca =1, spriteclips = 10;
-        void load_anh(string pathright, string pathleft);
-        void handle_event(SDL_Event &e, SDL_Rect SpriteClips[]);
-        void move(SDL_Event &e, SDL_Rect SpriteClips[]);
-        void render_ca();
-        bool check_collision(cacon camini);
-        int toadox=SCREEN_WIDTH/2 -50;
-        int toadoy=0;
-        int velx=0, vely=0;
-        SDL_Rect *current_clip;
-        int frame =0;
-        SDL_Texture *concadan;
-        SDL_Texture *concadan_right;
-        SDL_Texture *concadan_left;
-        ~ca(){
-        SDL_DestroyTexture(concadan);
-        SDL_DestroyTexture(concadan_left);
-        SDL_DestroyTexture(concadan_right);}
-};
-class cacon{
-    public:
-        int sizeca = 1, spriteclips = 7;
-        int toadox = SCREEN_WIDTH/2 , toadoy = SCREEN_HEIGHT/2;
-        int frame =0;
-        int speed = 0;
-        int f=0;
-        SDL_Rect* current_clip;
-        SDL_Texture* mTexture;
-        SDL_Texture* leftTexture;
-        SDL_Texture* rightTexture;
-        bool direction = false;
-        void load_anh(string pathleft, string pathright, bool direction);
-        void move(bool direction,SDL_Rect SpriteClips[]);
-        void render();
-};
-bool ca::check_collision(cacon camini){
-    if(toadox + current_clip->w - 60 <= camini.toadox){
-        return false;
-    }
-    if(toadox >= camini.toadox+camini.current_clip->w - 20){
-        return false;
-    }
-    if(toadoy + current_clip->h - 30 <= camini.toadoy){
-        return false;
-    }
-    if(toadoy >= camini.toadoy + camini.current_clip->h ){
-        return false;
-    }
-    return true;
-}
-void cacon::load_anh(string pathleft, string pathright, bool direction)
-{
-    SDL_Surface* loadedSurface1 = IMG_Load(pathleft.c_str());
-    SDL_SetColorKey(loadedSurface1,SDL_TRUE, SDL_MapRGB(loadedSurface1->format,0xFF,0xFF,0xFF));
-    leftTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface1);
-    SDL_Surface* loadedSurface2 = IMG_Load(pathright.c_str());
-    SDL_SetColorKey(loadedSurface2, SDL_TRUE, SDL_MapRGB(loadedSurface2->format,0xFF,0xFF,0xFF));
-    rightTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface2);
-    if(direction){
-        mTexture = rightTexture;
-    }
-    else{
-        mTexture = leftTexture;
-    }
-}
-
-void cacon::move(bool direction, SDL_Rect SpriteClips[])
-{
-    if(direction){
-        toadox++;
-        current_clip = &SpriteClips[(f/100)+spriteclips];
-        f++;
-        if(f==300) f=0;
-        if(toadox == SCREEN_WIDTH){
-            toadox =0;
-        }
-    }
-    else{
-        toadox--;
-        current_clip = &SpriteClips[(f/100)+spriteclips];
-        f++;
-        if(f==300) f=0;
-        if(toadox ==0){
-            toadox = SCREEN_WIDTH;
-        }
-    }
-}
-
-void cacon::render()
-{
-    SDL_Rect quadrad = {toadox, toadoy, current_clip->w, current_clip->h};
-    SDL_RenderCopy(gRenderer, mTexture, current_clip, &quadrad);
-}
-
-void ca::load_anh(string pathright, string pathleft){
-    SDL_Surface *loadsurface1 = IMG_Load(pathright.c_str());
-    SDL_SetColorKey(loadsurface1,SDL_TRUE, SDL_MapRGB(loadsurface1->format,0xFF,0xFF,0xFF));
-    concadan_right = SDL_CreateTextureFromSurface(gRenderer,loadsurface1);
-    SDL_Surface *loadsurface2 = IMG_Load(pathleft.c_str());
-    SDL_SetColorKey(loadsurface2,SDL_TRUE, SDL_MapRGB(loadsurface2->format,0xFF,0xFF,0xFF));
-    concadan_left = SDL_CreateTextureFromSurface(gRenderer, loadsurface2);
-    concadan = concadan_right;
-}
-void ca::move(SDL_Event &e, SDL_Rect SpriteClips[]){
-    if(e.type == SDL_MOUSEMOTION);
-    else{
-    toadox += velx;
-    toadoy += vely;
-    }
-}
-void ca::render_ca(){
-    SDL_Rect toadoca = {toadox,toadoy,current_clip->w, current_clip->h};
-    SDL_RenderCopy(gRenderer, concadan,current_clip, &toadoca);
-}
-void ca::handle_event(SDL_Event &e, SDL_Rect SpriteClips[]){
-    const Uint8 *keystates = SDL_GetKeyboardState(NULL);
-
-    if(keystates[SDL_SCANCODE_LEFT]){
-            concadan = concadan_left;
-            toadox-=2;
-    }
-    if(keystates[SDL_SCANCODE_RIGHT]){
-            concadan = concadan_right;
-            toadox+=2;
-    }
-    if(keystates[SDL_SCANCODE_UP]){
-            toadoy-=2;
-    }
-    if(keystates[SDL_SCANCODE_DOWN]){
-            toadoy +=2;
-    }
-    if(keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_LEFT]){
-        current_clip = &SpriteClips[(frame/3)+spriteclips];
-        frame++;
-        if(frame == 9) frame =0;
-    }
-    if(keystates[SDL_SCANCODE_DOWN] || keystates[SDL_SCANCODE_UP]){
-        current_clip = &SpriteClips[(frame/3)+spriteclips];
-        frame++;
-        if(frame == 9) frame =0;
-    }
-}
- SDL_Texture *loadBackground(){
-    SDL_Surface *loadsurface = IMG_Load("background.png");
-    SDL_Texture *background = SDL_CreateTextureFromSurface(gRenderer,loadsurface);
-    SDL_FreeSurface(loadsurface);
-    return background;
-}
-void renderBackground(SDL_Texture *background){
-    SDL_RenderCopy(gRenderer,background,nullptr,nullptr);
-}
-void initSDL()
-{
-    gWindow = SDL_CreateWindow("Big_game_test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(gRenderer);
-}
 int main(int argc, char* argv[])
 {
-    initSDL();
+    SDL_Window *gWindow;
+    SDL_Renderer *gRenderer;
+    init(gWindow, gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     TTF_Init();
     bool quit = false;
     SDL_Event e;
@@ -216,95 +57,95 @@ int main(int argc, char* argv[])
     //concangua
     SpriteClips[7].x = 0;
     SpriteClips[7].y = 0;
-    SpriteClips[7].w = 52;
-    SpriteClips[7].h = 100;
+    SpriteClips[7].w = 52/2;
+    SpriteClips[7].h = 100/2;
 
-    SpriteClips[8].x = 52;
+    SpriteClips[8].x = 52/2;
     SpriteClips[8].y = 0;
-    SpriteClips[8].w = 52;
-    SpriteClips[8].h = 100;
+    SpriteClips[8].w = 52/2;
+    SpriteClips[8].h = 100/2;
 
-    SpriteClips[9].x = 104;
+    SpriteClips[9].x = 104/2;
     SpriteClips[9].y = 0;
-    SpriteClips[9].w = 56;
-    SpriteClips[9].h = 100;
+    SpriteClips[9].w = 56/2;
+    SpriteClips[9].h = 100/2;
     //conbachtuoc
     SpriteClips[10].x = 0;
     SpriteClips[10].y = 0;
-    SpriteClips[10].w = 116;
-    SpriteClips[10].h = 130;
+    SpriteClips[10].w = 116/2;
+    SpriteClips[10].h = 130/2;
 
-    SpriteClips[11].x = 116;
+    SpriteClips[11].x = 116/2;
     SpriteClips[11].y = 0;
-    SpriteClips[11].w = 117;
-    SpriteClips[11].h = 130;
+    SpriteClips[11].w = 117/2;
+    SpriteClips[11].h = 130/2;
 
-    SpriteClips[12].x = 233;
+    SpriteClips[12].x = 233/2;
     SpriteClips[12].y = 0;
-    SpriteClips[12].w = 115;
-    SpriteClips[12].h = 130;
+    SpriteClips[12].w = 115/2;
+    SpriteClips[12].h = 130/2;
     // ca ke soc
     SpriteClips[13].x = 0;
     SpriteClips[13].y = 0;
-    SpriteClips[13].w = 208;
-    SpriteClips[13].h = 160;
+    SpriteClips[13].w = 208/2;
+    SpriteClips[13].h = 160/2;
 
-    SpriteClips[14].x = 208;
+    SpriteClips[14].x = 208/2;
     SpriteClips[14].y = 0;
-    SpriteClips[14].w = 210;
-    SpriteClips[14].h = 160;
+    SpriteClips[14].w = 210/2;
+    SpriteClips[14].h = 160/2;
 
-    SpriteClips[15].x = 418;
+    SpriteClips[15].x = 418/2;
     SpriteClips[15].y = 0;
-    SpriteClips[15].w = 204;
-    SpriteClips[15].h = 160;
+    SpriteClips[15].w = 204/2;
+    SpriteClips[15].h = 160/2;
     //ca hong
     SpriteClips[16].x = 0;
     SpriteClips[16].y = 0;
-    SpriteClips[16].w = 391;
-    SpriteClips[16].h = 270;
+    SpriteClips[16].w = 391/2;
+    SpriteClips[16].h = 270/2;
 
-    SpriteClips[17].x = 391;
+    SpriteClips[17].x = 391/2;
     SpriteClips[17].y = 0;
-    SpriteClips[17].w = 354;
-    SpriteClips[17].h = 270;
+    SpriteClips[17].w = 354/2;
+    SpriteClips[17].h = 270/2;
 
-    SpriteClips[18].x = 745;
+    SpriteClips[18].x = 745/2;
     SpriteClips[18].y = 0;
-    SpriteClips[18].w = 337;
-    SpriteClips[18].h = 270;
+    SpriteClips[18].w = 337/2;
+    SpriteClips[18].h = 270/2;
 
     //ca noc
     SpriteClips[19].x = 0;
     SpriteClips[19].y = 0;
-    SpriteClips[19].w = 261;
-    SpriteClips[19].h = 200;
+    SpriteClips[19].w = 261/2;
+    SpriteClips[19].h = 200/2;
 
-    SpriteClips[20].x = 261;
+    SpriteClips[20].x = 261/2;
     SpriteClips[20].y = 0;
-    SpriteClips[20].w = 240;
-    SpriteClips[20].h = 200;
+    SpriteClips[20].w = 240/2;
+    SpriteClips[20].h = 200/2;
 
-    SpriteClips[21].x = 501;
+    SpriteClips[21].x = 501/2;
     SpriteClips[21].y = 0;
-    SpriteClips[21].w = 239;
-    SpriteClips[21].h = 200;
+    SpriteClips[21].w = 239/2;
+    SpriteClips[21].h = 200/2;
 
     //ca he
     SpriteClips[22].x = 0;
     SpriteClips[22].y = 0;
-    SpriteClips[22].w = 429;
-    SpriteClips[22].h = 240;
+    SpriteClips[22].w = 429/2;
+    SpriteClips[22].h = 240/2;
 
-    SpriteClips[23].x = 429;
+    SpriteClips[23].x = 429/2;
     SpriteClips[23].y = 0;
-    SpriteClips[23].w = 397;
-    SpriteClips[23].h = 240;
+    SpriteClips[23].w = 397/2;
+    SpriteClips[23].h = 240/2;
 
-    SpriteClips[24].x = 826;
+    SpriteClips[24].x = 826/2;
     SpriteClips[24].y = 0;
-    SpriteClips[24].w = 384;
-    SpriteClips[24].h = 240;
+    SpriteClips[24].w = 384/2;
+    SpriteClips[24].h = 240/2;
 
     ca conca;
     cacon camini[3];
@@ -330,14 +171,14 @@ int main(int argc, char* argv[])
         camini[i].toadoy = rd +150 ;
         cakesoc[i].toadoy = rd + 250;
 
-        camini[i].load_anh("caminileft.png","caminiright.png",camini[i].direction);
-        cakesoc[i].load_anh("cakesocleft.png", "cakesocright.png", cakesoc[i].direction);
+        camini[i].load_anh("caminileft.png","caminiright.png",camini[i].direction, gRenderer);
+        cakesoc[i].load_anh("cakesocleft.png", "cakesocright.png", cakesoc[i].direction, gRenderer);
         i++;
     }
 
-    conca.load_anh("bachtuoc.png","bachtuocleft.png");
+    conca.load_anh("bachtuoc.png","bachtuocleft.png", gRenderer);
     conca.current_clip = &SpriteClips[10];
-    SDL_Texture *background = loadBackground();
+    SDL_Texture *background = loadBackground(gRenderer);
     while(!quit){
         while(SDL_PollEvent(&e)!=0){
             if(e.type == SDL_QUIT)  quit = true;
@@ -393,17 +234,17 @@ int main(int argc, char* argv[])
                 }
         }
         if(score == 100){
-            conca.load_anh("canocright.png","canocleft.png");
+            conca.load_anh("canocright.png","canocleft.png", gRenderer);
             conca.spriteclips = 19;
             conca.size_ca = 2;
         }
         SDL_RenderClear(gRenderer);
-        renderBackground(background);
+        renderBackground(background, gRenderer);
         for(int i=0;i<=2;i++){
-            camini[i].render();
-            cakesoc[i].render();
+            camini[i].render(gRenderer);
+            cakesoc[i].render(gRenderer);
         }
-        conca.render_ca();
+        conca.render_ca(gRenderer);
         SDL_RenderPresent(gRenderer);
     }
     TTF_Quit();

@@ -31,6 +31,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="SDL_utils.cpp" />
+		<Unit filename="SDL_utils.h" />
+		<Unit filename="ca.cpp" />
+		<Unit filename="ca.h" />
+		<Unit filename="cacon.cpp" />
+		<Unit filename="cacon.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

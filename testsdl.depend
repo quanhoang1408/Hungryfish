@@ -1,9 +1,40 @@
 # depslib dependency file v1.0
-1652144805 source:f:\testsdl\main.cpp
+1652750311 source:f:\testsdl\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_ttf.h>
 	<SDL_image.h>
 	<stdlib.h>
 	<time.h>
+	"ca.h"
+	"cacon.h"
+	"SDL_utils.h"
+
+1652747581 source:f:\testsdl\cacon.cpp
+	"cacon.h"
+
+1652748680 f:\testsdl\cacon.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"ca.h"
+
+1652749295 source:f:\testsdl\ca.cpp
+	"cacon.h"
+	"ca.h"
+	"SDL_utils.h"
+
+1652749280 f:\testsdl\ca.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"cacon.h"
+
+1652257454 f:\testsdl\sdl_utils.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
+1652257454 source:f:\testsdl\sdl_utils.cpp
+	"SDL_utils.h"
 
