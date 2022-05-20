@@ -6,7 +6,7 @@
 #include<SDL_image.h>
 #include"ca.h"
 using namespace std;
-
+class ca;
 class cacon{
     public:
         int SCREEN_WIDTH = 1000;

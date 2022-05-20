@@ -15,6 +15,7 @@ class ca{
         void move(SDL_Event &e, SDL_Rect SpriteClips[]);
         void render_ca(SDL_Renderer *gRenderer);
         bool check_collision(cacon camini);
+        bool check_nearby(cacon camini);
         int toadox=1000/2 -50;
         int toadoy=0;
         int velx =0, vely=0;

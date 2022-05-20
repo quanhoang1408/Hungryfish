@@ -41,3 +41,4 @@ void cacon::render(SDL_Renderer *gRenderer)
     SDL_Rect quadrad = {toadox, toadoy, current_clip->w, current_clip->h};
     SDL_RenderCopy( gRenderer, mTexture, current_clip, &quadrad);
 }
+

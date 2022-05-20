@@ -65,3 +65,19 @@ void ca::handle_event(SDL_Event &e, SDL_Rect SpriteClips[]){
         if(frame == 9) frame =0;
     }
 }
+
+bool ca::check_nearby(cacon camini){
+    if(toadox + current_clip->w +25 <= camini.toadox){
+        return false;
+    }
+    if(toadox -25>= camini.toadox+camini.current_clip->w){
+        return false;
+    }
+    if(toadoy + current_clip->h +25 <= camini.toadoy){
+        return false;
+    }
+    if(toadoy -25>= camini.toadoy + camini.current_clip->h ){
+        return false;
+    }
+    return true;
+}
