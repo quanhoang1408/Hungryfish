@@ -342,9 +342,10 @@ void Intro(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
 {
     SDL_Texture* ingamebg = loadBackground(gRenderer, "backgroundstart.png");
     SDL_Texture* play_button = loadBackground(gRenderer, "startgame.png");
+    SDL_Texture *instruction = loadBackground(gRenderer, "instruction.png");
 
-    SDL_Rect SpriteButs[2];
-
+    SDL_Rect SpriteButs[3];
+    //startgame
     SpriteButs[0].x = 0;
     SpriteButs[0].y = 0;
     SpriteButs[0].w = 300;
@@ -354,11 +355,18 @@ void Intro(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
     SpriteButs[1].y = 0;
     SpriteButs[1].w = 300;
     SpriteButs[1].h = 85;
+    //instruction
+    SpriteButs[2].x = 0;
+    SpriteButs[2].y = 0;
+    SpriteButs[2].w = 247;
+    SpriteButs[2].h = 76;
 
     SDL_Rect currentButton = SpriteButs[0];
+    SDL_Rect currentInstruction = SpriteButs[2];
 
     bool start = false;
     bool inside = false;
+    bool inside_instruction = false;
     bool quit = false;
     SDL_Event e;
     while(!quit && !start)
@@ -366,17 +374,15 @@ void Intro(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
         while(SDL_PollEvent(&e) != 0)
         {
             if(e.type == SDL_QUIT) quit = true;
-
             if(e.type == SDL_MOUSEMOTION)
             {
                 int x, y;
                 SDL_GetMouseState(&x, &y);
                 inside = true;
-                if(x < 430 || x > 730 || y < 200 || y > 285)
+                if(x < 330 || x > 630 || y < 200 || y > 285)
                 {
                     inside = false;
                 }
-
                 if(inside == true) currentButton = SpriteButs[1];
                 else currentButton = SpriteButs[0];
             }
@@ -385,7 +391,7 @@ void Intro(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
 
         SDL_RenderClear(gRenderer);
         SDL_RenderCopy(gRenderer, ingamebg, NULL, NULL);
-        SDL_Rect quadrad = {430,200,300,85};
+        SDL_Rect quadrad = {330,200,300,85};
         SDL_RenderCopy(gRenderer, play_button, &currentButton, &quadrad);
         SDL_RenderPresent(gRenderer);
     }
