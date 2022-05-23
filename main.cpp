@@ -16,7 +16,6 @@ void game(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 void Intro(SDL_Window* &gWindow, SDL_Renderer* &gRenderer);
 int main(int argc, char* argv[])
 {
-
     SDL_Window *gWindow;
     SDL_Renderer *gRenderer;
     init(gWindow, gRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -456,19 +455,19 @@ bool play_again(SDL_Window* &gWindow, SDL_Renderer* &gRenderer)
                 else current_gob = SpriteButs[0];
             }
         }
-        if(inside_pa == true && e.type == SDL_MOUSEBUTTONDOWN)
+        if(inside_pa == true && e.type == SDL_MOUSEBUTTONUP)
         {
             return true;
         }
-        else if(inside_quit == true && e.type == SDL_MOUSEBUTTONDOWN)
+        else if(inside_quit == true && e.type == SDL_MOUSEBUTTONUP)
         {
             return false;
         }
 
         SDL_RenderClear(gRenderer);
         SDL_RenderCopy(gRenderer, game_over_bg, NULL, NULL);
-        SDL_Rect quit_rect = {430,200,300,85};
-        SDL_Rect play_again_rect = {200,300,350,150};
+        SDL_Rect quit_rect = {430,200,150,85};
+        SDL_Rect play_again_rect = {430,300,150,85};
         SDL_RenderCopy(gRenderer, play_again_button, &current_pab, &play_again_rect);
         SDL_RenderCopy(gRenderer, quit_button, &current_gob, &quit_rect);
         SDL_RenderPresent(renderer);
